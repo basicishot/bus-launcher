@@ -61,6 +61,6 @@ jobs:
       shell: pwsh
       run: |
         $json = @{
-          content = "new bus launcher build dropped`n<${{ steps.create_release.outputs.html_url }}>`ncommit: ${{ steps.commit.outputs.message }}"
+          content = "@here new bus launcher build dropped`n<${{ steps.create_release.outputs.html_url }}>`ncommit: ${{ steps.commit.outputs.message }}"
         } | convertto-json -depth 10
         invoke-webrequest -uri ${{ secrets.whook }} -method post -body $json -contenttype 'application/json'
