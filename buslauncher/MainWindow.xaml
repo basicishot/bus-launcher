@@ -1,0 +1,18 @@
+﻿<Window x:Class="buslauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="bus launcher"
+        Height="480"
+        Width="820"
+        Loaded="winloads">
+
+    <Grid>
+        <StackPanel>
+            <TextBox x:Name="usernamez" />
+            <ComboBox x:Name="versionsbx" />
+            <Button Content="launch" Click="laubuttclicl"/>
+            <TextBlock x:Name="statustex"/>
+            <TextBox x:Name="logbox"/>
+        </StackPanel>
+    </Grid>
+</Window>
