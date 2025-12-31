@@ -1,15 +1,9 @@
-<PropertyGroup>
-  <OutputType>WinExe</OutputType>
-  <TargetFramework>net472</TargetFramework>
-  <UseWPF>true</UseWPF>
-</PropertyGroup>
-<ItemGroup>
-  <ApplicationDefinition Include="App.xaml">
-    <Generator>MSBuild:Compile</Generator>
-    <SubType>Designer</SubType>
-  </ApplicationDefinition>
-  <Page Include="MainWindow.xaml">
-    <Generator>MSBuild:Compile</Generator>
-    <SubType>Designer</SubType>
-  </Page>
-</ItemGroup>
+<Application x:Class="buslauncher.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:buslauncher"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        
+    </Application.Resources>
+</Application>
