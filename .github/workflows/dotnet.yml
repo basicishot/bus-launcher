@@ -55,4 +55,4 @@ jobs:
 
     - name: discord notification
       run: |
-        curl -h "content-type: application/json" -d "{\"content\": \"new bus launcher build dropped\\n<${{ steps.create_release.outputs.html_url }}>\\ncommit: ${{ steps.commit.outputs.message }}\"}" ${{ secrets.whook }}
+        curl -H "content-type: application/json" -d "{\"content\": \"new bus launcher build dropped\\n<${{ steps.create_release.outputs.html_url }}>\\ncommit: ${{ steps.commit.outputs.message }}\"}" ${{ secrets.whook }}
