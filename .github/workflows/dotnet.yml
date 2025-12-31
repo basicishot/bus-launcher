@@ -30,4 +30,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: buslauncher-exe
-        path: buslauncher/buslauncher/bin/Release/buslauncher.exe
+        path: buslauncher/bin/Release/buslauncher.exe
