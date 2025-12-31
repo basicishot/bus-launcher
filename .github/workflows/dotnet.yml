@@ -1,33 +1,55 @@
-name: .NET Build
-
+name: .net build
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
-  build:
+  build-and-release:
     runs-on: windows-latest
-
     steps:
-    - name: repo checlout
+    - name: repo checkout
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
-    - name: setup ms
+    - name: setup msbuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: setup nugert
+    - name: setup nuget
       uses: nuget/setup-nuget@v2
 
-    - name: res
+    - name: restore packages
       run: nuget restore buslauncher.sln
 
     - name: build
-      run: msbuild buslauncher.sln /p:Configuration=Release /verbosity:normal
+      run: msbuild buslauncher.sln /p:configuration=release /verbosity:normal
 
-    - name: upload
-      uses: actions/upload-artifact@v4
+    - name: get commit message
+      id: commit
+      run: echo "message=$(git log -1 --pretty=%B | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_OUTPUT
+
+    - name: create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        github_token: ${{ secrets.github_token }}
       with:
-        name: buslauncher-exe
-        path: buslauncher/bin/Release/buslauncher.exe
+        tag_name: build-${{ github.sha }}
+        release_name: bus launcher build ${{ github.sha }}
+        body: ${{ steps.commit.outputs.message }}
+        draft: false
+        prerelease: false
+
+    - name: upload exe to release
+      uses: actions/upload-release-asset@v1
+      env:
+        github_token: ${{ secrets.github_token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: buslauncher/bin/release/buslauncher.exe
+        asset_name: buslauncher.exe
+        asset_content_type: application/octet-stream
+
+    - name: discord notification
+      run: |
+        curl -h "content-type: application/json" -d "{\"content\": \"new bus launcher build dropped\\n<${{ steps.create_release.outputs.html_url }}>\\ncommit: ${{ steps.commit.outputs.message }}\"}" ${{ secrets.whook }}
