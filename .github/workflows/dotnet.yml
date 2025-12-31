@@ -29,7 +29,11 @@ jobs:
 
     - name: get commit message
       id: commit
-      run: echo "message=$(git log -1 --pretty=%B | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_OUTPUT
+      shell: pwsh
+      run: |
+        $msg = git log -1 --pretty=%B
+        $msg = $msg -replace '"', '\"' -replace '\r\n', '\n' -replace '\n', '\\n'
+        echo "message=$msg" >> $env:GITHUB_OUTPUT
 
     - name: create release
       id: create_release
@@ -54,5 +58,9 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: discord notification
+      shell: pwsh
       run: |
-        curl -H "content-type: application/json" -d "{\"content\": \"new bus launcher build dropped\\n<${{ steps.create_release.outputs.html_url }}>\\ncommit: ${{ steps.commit.outputs.message }}\"}" ${{ secrets.whook }}
+        $json = @{
+          content = "new bus launcher build dropped`n<${{ steps.create_release.outputs.html_url }}>`ncommit: ${{ steps.commit.outputs.message }}"
+        } | convertto-json -depth 10
+        invoke-webrequest -uri ${{ secrets.whook }} -method post -body $json -contenttype 'application/json'
