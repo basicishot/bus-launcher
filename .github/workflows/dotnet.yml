@@ -1,4 +1,4 @@
-name: .NET
+name: .NET Build
 
 on:
   push:
@@ -11,24 +11,23 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: repo checlout
+      uses: actions/checkout@v4
 
-    - name: setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 10.0.x
+    - name: setup ms
+      uses: microsoft/setup-msbuild@v2
 
-    - name: setup NuGet
+    - name: setup nugert
       uses: nuget/setup-nuget@v2
 
-    - name: restore NuGet packages
+    - name: res
       run: nuget restore buslauncher.sln
 
     - name: build
-      run: dotnet build --no-restore --configuration Release
+      run: msbuild buslauncher.sln /p:Configuration=Release /verbosity:normal
 
     - name: upload
       uses: actions/upload-artifact@v4
       with:
-        name: buslauncher
-        path: bin/Release/buslauncher.exe
+        name: buslauncher-exe
+        path: buslauncher/buslauncher/bin/Release/buslauncher.exe
